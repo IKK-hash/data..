@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Gaji Karyawan PT.IKK</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40mx;
+      background-image: url("https://images.unsplash.com/photo-1722122277507-673072717a84?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687");
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #eaeaea;
+    }
+    input[type="number"], input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 4px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Rekap Gaji Karyawan PT.IKK</h2>
+
+  <table id="gajiTable">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Tgl</th>
+        <th>Nama</th>
+        <th>NIK</th>
+        <th>Bagian</th>
+        <th>Gaji/Hari (Rp)</th>
+        <th>Total Hari</th>
+        <th>Total Gaji</th>
+        <th>Lembur (Rp)</th>
+        <th>Jam Lembur</th>
+        <th>Total Lembur</th>
+        <th>Grand Total</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <tr>
+        <td>1</td>
+        <td><input type="text" value=""></td>
+        <td><input type="text" value=""></td>
+        <td><input type="text" value=""></td>
+        <td><input type="text" value=""></td>
+        <td><input type="number" value="" oninput="hitung(this)"></td>
+        <td><input type="number" value="" oninput="hitung(this)"></td>
+        <td class="totalGaji"></td>
+        <td><input type="number" value="" oninput="hitung(this)"></td>
+        <td><input type="number" value="" oninput="hitung(this)"></td>
+        <td class="totalLembur"></td>
+        <td class="grandTotal"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button onclick="tambahBaris()">+ Tambah Baris</button>
+
+  <script>
+    // Fungsi format Rupiah
+    function formatRupiah(angka) {
+      return "Rp " + angka.toLocaleString("id-ID", { minimumFractionDigits: 0 });
+    }
+
+    // Fungsi perhitungan otomatis
+    function hitung(el) {
+      const row = el.closest("tr");
+      const gajiPerHari = parseFloat(row.querySelector('td:nth-child(4) input').value) || 0;
+      const totalHari = parseFloat(row.querySelector('td:nth-child(5) input').value) || 0;
+      const lemburPerJam = parseFloat(row.querySelector('td:nth-child(7) input').value) || 0;
+      const jamLembur = parseFloat(row.querySelector('td:nth-child(8) input').value) || 0;
+
+      const totalGaji = gajiPerHari * totalHari;
+      const totalLembur = lemburPerJam * jamLembur;
+      const grandTotal = totalGaji + totalLembur;
+
+      row.querySelector('.totalGaji').textContent = formatRupiah(totalGaji);
+      row.querySelector('.totalLembur').textContent = formatRupiah(totalLembur);
+      row.querySelector('.grandTotal').textContent = formatRupiah(grandTotal);
+    }
+
+    // Tambah baris baru
+    function tambahBaris() {
+      const tableBody = document.getElementById("tableBody");
+      const rowCount = tableBody.rows.length + 1;
+      const newRow = `
+        <tr>
+          <td>${rowCount}</td>
+          <td><input type="text" placeholder="dd/mm/yyyy"></td>
+          <td><input type="text" placeholder="Nama"></td>
+          <td><input type="number" oninput="hitung(this)"></td>
+          <td><input type="number" oninput="hitung(this)"></td>
+          <td class="totalGaji"></td>
+          <td><input type="number" oninput="hitung(this)"></td>
+          <td><input type="number" oninput="hitung(this)"></td>
+          <td class="totalLembur"></td>
+          <td class="grandTotal"></td>
+        </tr>`;
+      tableBody.insertAdjacentHTML('beforeend', newRow);
+    }
+
+    // Jalankan hitung awal
+    document.querySelectorAll('#gajiTable input').forEach(i => hitung(i));
+  </script>
+
+</body>
+</html>
